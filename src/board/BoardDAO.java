@@ -118,6 +118,62 @@ public class BoardDAO {
 		//getBoardList(각페이지마다 맨위에 첫번쨰로 보여질 시작글번호, 한 페이지당 보여지는 글개수)를 전달받아...
 		//검색한 글정보(BoardBean)하나하나를 ArrayList에 담아.. 반환함.
 		
+		
+		public List<BoardBean> getReadBoardList(){
+			String sql = "";
+			List<BoardBean> boardList = new ArrayList<BoardBean>();
+			
+			try {
+				//DB연결 
+				
+				con = getConnection();
+				//SQL문 만들기 
+				//정렬 re_ref 내림차순 정렬하여 검색한 후 re_seq 오름차순정렬하여 검색해 오는데 
+				//limit 각 페이지마다 맨위에 첫번째로 보여질 시작글 번호, 한 페이지당 보여줄 글개수 
+				sql = "select * from board order by readcount desc limit 0,10";
+				
+				pstmt = con.prepareStatement(sql);
+				
+				rs = pstmt.executeQuery();
+				
+				while(rs.next()) {
+					BoardBean bBean = new BoardBean();
+					//rs=> BoardBean에 저장 
+					 bBean.setContent(rs.getString("content"));
+					 bBean.setDate(rs.getTimestamp("date"));
+					 bBean.setIp(rs.getString("ip"));
+					 bBean.setName(rs.getString("name"));
+					 bBean.setNum(rs.getInt("num"));
+					 bBean.setPasswd(rs.getString("passwd"));
+					 bBean.setRe_lev(rs.getInt("re_lev"));
+					 bBean.setRe_ref(rs.getInt("re_ref"));
+					 bBean.setRe_seq(rs.getInt("re_seq"));
+					 bBean.setReadcount(rs.getInt("readcount"));
+					 bBean.setSubject(rs.getString("subject"));
+					 
+					 //BoardBean => ArrayList에 추가 
+					 
+					 boardList.add(bBean);
+				}//while반복
+			}catch (Exception e) {
+				System.out.println("getReadBoardList메소드에서 예외발생 : " +e);
+				// TODO: handle exception
+			}finally {
+				try {
+					if(rs != null) {rs.close();}
+					if(pstmt != null){pstmt.close();}
+					if(con != null) {con.close();}
+				}catch(SQLException e) {
+					e.printStackTrace();
+				}
+				
+			}
+			return boardList; //ArrayList를 notice.jsp로 리턴 
+		}//getBoardList메소드 끝 
+		
+		
+		
+		
 		public List<BoardBean> getBoardList(int startRow,int pageSize){
 			String sql = "";
 			List<BoardBean> boardList = new ArrayList<BoardBean>();

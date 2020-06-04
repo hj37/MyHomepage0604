@@ -1,3 +1,7 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="board.BoardDAO"%>
+<%@page import="board.BoardBean"%>
+<%@page import="java.util.List"%>
 <%@page import="org.jsoup.nodes.Element"%>
 <%@page import="org.jsoup.select.Elements"%>
 <%@page import="org.jsoup.Jsoup"%>
@@ -54,7 +58,9 @@
 					<jsp:include page="header.jsp"/>
 
 				<!-- Banner -->
-					<div id="banner" class="container">
+					<div id="banner" class="container" style="width:150%">
+						<p>롯데 자이언츠 하이라이트 영상</p>
+						
 						<section>
 							<table class="table table-hover" id="tb" style="text-align:center; font-size:15px; margin-bottom: -15px; border: 1px solid white" bgcolor = "white">
 							<%
@@ -118,11 +124,42 @@
 								</section>
 								<section class="6u"> 
 									<div class="box">
-										<p>Donec leo, vivamus fermentum nibh in augue praesent a lacus at urna congue rutrum  wisi maecenas ligula.</p>
-										<p>Donec leo, vivamus fermentum nibh in augue praesent a lacus at urna congue rutrum  wisi maecenas ligula.</p>
+										<p>커뮤니티 게시판 최다 조회순</p>
 									
-										<p>Donec leo, vivamus fermentum nibh in augue praesent a lacus at urna congue rutrum  wisi maecenas ligula.</p>
-										<a href="#" class="button">Read More</a> </div>
+										<%
+										BoardDAO dao = new BoardDAO();
+										
+										List<BoardBean> list = dao.getReadBoardList();		//최다 조회순 
+										%>
+	
+										<table class="table table-hover" id="tb" style="text-align:center; font-size:15px; margin-bottom: -15px; border: 1px solid white" bgcolor = "white">
+										<tr>
+										    <th  scope="col">이름</th>
+							    			<th  scope="col">제목</th>
+							    			<th  scope="col">날짜</th>	    			
+										    <th  scope="col">조회수</th>
+									    </tr>
+															
+															
+										
+										<% 
+										
+											for(int i = 0; i < list.size(); i++){
+									 			BoardBean bean = list.get(i);
+										%>
+										
+										
+											<tr>
+							 				<td><%=bean.getName() %></td>
+							 				<td><%=bean.getSubject() %></td>
+										    <td><%=new SimpleDateFormat("yyyy.MM.dd").format(bean.getDate()) %></td>
+										    <td><%=bean.getReadcount() %></td>		
+										   </tr>
+										<%
+											}
+										%>
+										</table>
+									</div>
 								</section>
 								
 							
